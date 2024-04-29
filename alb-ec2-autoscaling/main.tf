@@ -5,19 +5,19 @@ provider "aws" {
 data "aws_availability_zones" "available" {}
 data "aws_ami" "amazon_linux" {
   most_recent = true
-  owners      = ["amazon"]
+  owners      = [var.asg.ami_owner]
 
   filter {
     name   = "name"
-    values = ["al2023-ami-2023*86_64"]
+    values = [var.asg.ami_pattern]
   }
 }
 
 locals {
   name   = "${var.project.environment}-${var.project.name}"
-  region = "us-east-1"
+  region = var.project.region
 
-  vpc_cidr = var.cidr
+  vpc_cidr = var.vpc.cidr
   azs      = slice(data.aws_availability_zones.available.names, 0, 2)
 
   tags = {
@@ -100,6 +100,7 @@ module "alb" {
 
   target_groups = {
     ex_asg = {
+      name = "${var.project.environment}-${var.project.name}"
       backend_protocol                  = "HTTP"
       backend_port                      = 80
       target_type                       = "instance"
@@ -126,9 +127,9 @@ module "autoscaling" {
 
   ignore_desired_capacity_changes = true
 
-  min_size                  = 0
-  max_size                  = 1
-  desired_capacity          = 1
+  min_size                  = var.asg.min_size
+  max_size                  = var.asg.max_size
+  desired_capacity          = var.asg.desired_capacity
   wait_for_capacity_timeout = 0
   default_instance_warmup   = 300
   health_check_type         = "EC2"
@@ -186,7 +187,7 @@ module "autoscaling" {
   update_default_version      = true
 
   image_id          = data.aws_ami.amazon_linux.id
-  instance_type     = "t3.micro"
+  instance_type     = var.asg.instance_type
   user_data         = filebase64("scripts/user_data.sh")
   ebs_optimized     = true
   enable_monitoring = true
