@@ -113,6 +113,8 @@ module "alb" {
     }
   }
 
+  tags = local.tags
+
 }
 
 module "autoscaling" {
@@ -303,8 +305,6 @@ module "autoscaling" {
     }
   ]
 
-  tags = local.tags
-
   # Autoscaling Schedule
   schedules = {
     night = {
@@ -391,6 +391,8 @@ module "autoscaling" {
       ]
     }
   }
+
+  tags = local.tags
 }
 
 
@@ -461,4 +463,6 @@ resource "aws_security_group" "ec2_sg" {
     cidr_blocks      = ["0.0.0.0/0"]
     ipv6_cidr_blocks = ["::/0"]
   }
+
+  tags = local.tags
 }

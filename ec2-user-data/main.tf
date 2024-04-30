@@ -13,7 +13,7 @@ data "aws_availability_zones" "available" {
 
 data "aws_ami" "ubuntu" {
   most_recent = true
-  owners      = ["amazon"]
+  owners      = [var.ec2.ami_owner]
 
   filter {
     name   = "name"
@@ -55,6 +55,7 @@ module "ec2_instance" {
 
   create_iam_instance_profile = true
   iam_role_description        = "IAM role for EC2 instance"
+  iam_role_name               = "AmazonSSMManagedInstanceCoreRole"
   iam_role_policies = {
     AmazonSSMManagedInstanceCore = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
   }

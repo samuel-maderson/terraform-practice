@@ -1,9 +1,10 @@
 #!/bin/bash
 
 # Install Apache
-apt update
-apt install -y apache2
-systemctl start apache2
-systemctl enable apache2
+sudo apt update
+sudo apt install -y apache2
+sudo systemctl start apache2
+sudo systemctl enable apache2
 
-echo "HelloWorld" > /var/www/html
+sudo echo "HelloWorld" > ./index.html
+sudo mv ./index.html /var/www/html/
