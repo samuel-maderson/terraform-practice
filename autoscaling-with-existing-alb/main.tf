@@ -5,18 +5,18 @@ provider "aws" {
 data "aws_availability_zones" "available" {}
 data "aws_ami" "my_ami" {
   most_recent = true
-  owners      = ["self"]
+  owners      = [var.asg.ami_owner]
 
   filter {
     name   = "name"
-    values = ["myami"]
+    values = [var.asg.ami_name]
   }
 }
 
 data "aws_vpc" "selected" {
     filter {
         name = "tag:Name"
-        values = ["default-vpc"]
+        values = [var.vpc.name]
     }
 }
 
@@ -27,21 +27,20 @@ data "aws_subnets" "main_ones" {
     }
 
     tags = {
-        Name = "the-one"
+        Name = var.vpc.private_subnets_pattern
     }
 }
 
 data "aws_lb_target_group" "tg_test" {
-    arn = "arn:aws:elasticloadbalancing:us-east-1:339712722806:targetgroup/tg-test/be9b5f9ec1fde1c4"
-    name = "tg-test"
+    arn  = var.asg.target_group_arn
 }
 
 locals {
   name   = "${var.project.environment}-${var.project.name}"
   region = var.project.region
 
-  vpc_cidr = var.vpc.cidr
-  azs      = slice(data.aws_availability_zones.available.names, 0, 2)
+  # vpc_cidr = var.vpc.cidr
+  # azs      = slice(data.aws_availability_zones.available.names, 0, 2)
 
   tags = {
       example    = local.name
@@ -206,12 +205,11 @@ module "autoscaling" {
 
   network_interfaces = [
     {
-      subnet_id = "subnet-03edd23a6f5ea9b62"
+      subnet_id = var.asg.ec2_ni_private_subnet
       delete_on_termination = true
       description           = "eth0"
       device_index          = 0
       security_groups       = [module.asg_sg.security_group_id]
-      associate_public_ip_address = true
     }
   ]
 
@@ -274,26 +272,26 @@ module "autoscaling" {
         target_value = 50.0
       }
     },
-    predictive-scaling = {
-      policy_type = "PredictiveScaling"
-      predictive_scaling_configuration = {
-        mode                         = "ForecastAndScale"
-        scheduling_buffer_time       = 10
-        max_capacity_breach_behavior = "IncreaseMaxCapacity"
-        max_capacity_buffer          = 10
-        metric_specification = {
-          target_value = 32
-          predefined_scaling_metric_specification = {
-            predefined_metric_type = "ASGAverageCPUUtilization"
-            resource_label         = "testLabel"
-          }
-          predefined_load_metric_specification = {
-            predefined_metric_type = "ASGTotalCPUUtilization"
-            resource_label         = "testLabel"
-          }
-        }
-      }
-    }
+    # predictive-scaling = {
+    #   policy_type = "PredictiveScaling"
+    #   predictive_scaling_configuration = {
+    #     mode                         = "ForecastAndScale"
+    #     scheduling_buffer_time       = 10
+    #     max_capacity_breach_behavior = "IncreaseMaxCapacity"
+    #     max_capacity_buffer          = 10
+    #     metric_specification = {
+    #       target_value = 32
+    #       predefined_scaling_metric_specification = {
+    #         predefined_metric_type = "ASGAverageCPUUtilization"
+    #         resource_label         = "testLabel"
+    #       }
+    #       predefined_load_metric_specification = {
+    #         predefined_metric_type = "ASGTotalCPUUtilization"
+    #         resource_label         = "testLabel"
+    #       }
+    #     }
+    #   }
+    # }
     # request-count-per-target = {
     #   policy_type               = "TargetTrackingScaling"
     #   estimated_instance_warmup = 120
@@ -305,23 +303,23 @@ module "autoscaling" {
     #     target_value = 800
     #   }
     # }
-    scale-out = {
-      name                      = "scale-out"
-      adjustment_type           = "ExactCapacity"
-      policy_type               = "StepScaling"
-      estimated_instance_warmup = 120
-      step_adjustment = [
-        {
-          scaling_adjustment          = 1
-          metric_interval_lower_bound = 0
-          metric_interval_upper_bound = 10
-        },
-        {
-          scaling_adjustment          = 2
-          metric_interval_lower_bound = 10
-        }
-      ]
-    }
+    # scale-out = {
+    #   name                      = "scale-out"
+    #   adjustment_type           = "ExactCapacity"
+    #   policy_type               = "StepScaling"
+    #   estimated_instance_warmup = 120
+    #   step_adjustment = [
+    #     {
+    #       scaling_adjustment          = 1
+    #       metric_interval_lower_bound = 0
+    #       metric_interval_upper_bound = 10
+    #     },
+    #     {
+    #       scaling_adjustment          = 2
+    #       metric_interval_lower_bound = 10
+    #     }
+    #   ]
+    # }
   }
 }
 
@@ -334,15 +332,15 @@ module "asg_sg" {
   description = "A security group"
   vpc_id      = data.aws_vpc.selected.id
 
-#   ingress_cidr_blocks = ["0.0.0.0/0"]
-#   ingress_rules       = ["http-80-tcp", "all-icmp"]
-  computed_ingress_with_source_security_group_id = [
+  ingress_with_cidr_blocks = [
     {
-      rule                     = "http-80-tcp"
-      source_security_group_id = resource.aws_security_group.ec2_sg.id
-    }
+      from_port        = 80
+      to_port          = 80
+      protocol         = "tcp"
+      description      = "HTTP"
+      cidr_blocks = "0.0.0.0/0"
+    },
   ]
-  number_of_computed_ingress_with_source_security_group_id = 1
 
   egress_rules = ["all-all"]
 

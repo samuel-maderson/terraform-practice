@@ -10,9 +10,8 @@ variable "project" {
 variable "vpc" {
     description = "my vpc name"
     type = object({
-      cidr = string
-      private_subnets = list(string)
-      public_subnets = list(string)
+      name = string
+      private_subnets_pattern = string
     })
 }
 
@@ -23,7 +22,9 @@ variable "asg" {
       max_size = number
       desired_capacity = number
       instance_type = string
-      ami_pattern = string
+      ami_name = string
       ami_owner = string
+      target_group_arn = string
+      ec2_ni_private_subnet = string
     })
 }
