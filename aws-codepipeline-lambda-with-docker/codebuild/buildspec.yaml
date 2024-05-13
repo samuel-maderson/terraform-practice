@@ -5,10 +5,17 @@ phases:
     commands:
        - pwd
        - ls -lhta
+       # Terraform install
        - sudo yum install -y yum-utils shadow-utils
        - sudo yum-config-manager --add-repo https://rpm.releases.hashicorp.com/AmazonLinux/hashicorp.repo
        - sudo yum -y install terraform
+       # ECR Login
+       - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 975050165152.dkr.ecr.us-east-1.amazonaws.com
+       # Docker build
+       - docker build -t 118553362274.dkr.ecr.us-east-1.amazonaws.com/my-ecr:latest
+       # Docker push
+       - docker push 118553362274.dkr.ecr.us-east-1.amazonaws.com/my-ecr:latest
+       # Terraform init
        - cd aws-codepipeline-lambda-with-docker/iac && terraform init
-       - pwd
-       - ls -lhta ..
-       - ../scripts/deploy.sh
+       # Terraform plan & apply
+       - terraform plan && terraform apply -auto-approve
