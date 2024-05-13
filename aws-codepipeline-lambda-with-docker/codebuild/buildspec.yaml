@@ -1,5 +1,13 @@
 version: 0.2
 
+env:
+  variables:
+    ACCOUNT_ID: "767397760892"
+    AWS_REGION: "us-east-1"
+    IMAGE_REPO_NAME: "my-ecr"
+    ECR_REPO_URI: "$ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com"
+
+
 phases:
   build:
     commands:
@@ -10,11 +18,11 @@ phases:
        - sudo yum-config-manager --add-repo https://rpm.releases.hashicorp.com/AmazonLinux/hashicorp.repo
        - sudo yum -y install terraform
        # ECR Login
-       - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 975050165152.dkr.ecr.us-east-1.amazonaws.com
+       - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin $ECR_REPO_URI
        # Docker build
-       - docker build -t 118553362274.dkr.ecr.us-east-1.amazonaws.com/my-ecr:latest
+       - docker build -t ECR_REPO_URI/$IMAGE_REPO_NAME:latest .
        # Docker push
-       - docker push 118553362274.dkr.ecr.us-east-1.amazonaws.com/my-ecr:latest
+       - docker push ECR_REPO_URI/$IMAGE_REPO_NAME:latest
        # Terraform init
        - cd aws-codepipeline-lambda-with-docker/iac && terraform init
        # Terraform plan & apply
