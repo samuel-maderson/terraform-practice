@@ -30,6 +30,20 @@ module "lambda_function" {
                     "ecr:*"
                 ],
                 "Resource": ["*"]
+            },
+             {
+                "Effect": "Allow",
+                "Action": [
+                    "lambda:*"
+                ],
+                "Resource": ["*"]
+            },
+             {
+                "Effect": "Allow",
+                "Action": [
+                    "cloudwatch:*"
+                ],
+                "Resource": ["*"]
             }
         ]
     }
