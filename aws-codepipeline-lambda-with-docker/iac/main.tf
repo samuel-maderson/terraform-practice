@@ -1,8 +1,8 @@
 data "aws_ecr_authorization_token" "token" {}
 
-data "aws_iam_role" "my_role" {
-  name = "ROLE_TEST"
-}
+# data "aws_iam_role" "my_role" {
+#   name = "ROLE_TEST"
+# }
 
 provider "docker" {
   registry_auth {
