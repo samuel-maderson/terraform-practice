@@ -11,4 +11,4 @@ phases:
        - cd aws-codepipeline-lambda-with-docker/iac && terraform init
        - pwd
        - ls -lhta ..
-       - cd ../aws-codepipeline-lambda-with-docker/scripts/deploy.sh
+       - cd ../scripts/deploy.sh
