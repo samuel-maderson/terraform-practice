@@ -5,7 +5,6 @@ env:
     ACCOUNT_ID: "767397760892"
     AWS_REGION: "us-east-1"
     IMAGE_REPO_NAME: "my-ecr"
-    ECR_REPO_URI: "$ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com"
 
 
 phases:
@@ -21,9 +20,10 @@ phases:
        #- aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin $ECR_REPO_URI
        - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
        # Docker build
-       - docker build -t $ECR_REPO_URI/$IMAGE_REPO_NAME:latest .
+       - cd aws-codepipeline-lambda-with-docker
+       - docker build -t $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$IMAGE_REPO_NAME:latest .
        # Docker push
-       - docker push $ECR_REPO_URI/$IMAGE_REPO_NAME:latest
+       - docker push $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$IMAGE_REPO_NAME:latest
        # Terraform init
        - cd aws-codepipeline-lambda-with-docker/iac && terraform init
        # Terraform plan & apply
