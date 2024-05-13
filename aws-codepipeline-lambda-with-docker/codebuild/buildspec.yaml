@@ -19,11 +19,11 @@ phases:
        - sudo yum -y install terraform
        # ECR Login
        #- aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin $ECR_REPO_URI
-       - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 767397760892.dkr.ecr.us-east-1.amazonaws.com
+       - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
        # Docker build
-       - docker build -t ECR_REPO_URI/$IMAGE_REPO_NAME:latest .
+       - docker build -t $ECR_REPO_URI/$IMAGE_REPO_NAME:latest .
        # Docker push
-       - docker push ECR_REPO_URI/$IMAGE_REPO_NAME:latest
+       - docker push $ECR_REPO_URI/$IMAGE_REPO_NAME:latest
        # Terraform init
        - cd aws-codepipeline-lambda-with-docker/iac && terraform init
        # Terraform plan & apply
