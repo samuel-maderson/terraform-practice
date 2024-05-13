@@ -9,5 +9,4 @@ phases:
        - sudo yum-config-manager --add-repo https://rpm.releases.hashicorp.com/AmazonLinux/hashicorp.repo
        - sudo yum -y install terraform
        - cd aws-codepipeline-lambda-with-docker/iac && terraform init
-       - terraform plan
-       - terraform apply -auto-approve
+       - ../aws-codepipeline-lambda-with-docker/scripts/deploy.sh
