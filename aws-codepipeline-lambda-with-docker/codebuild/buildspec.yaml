@@ -1,7 +1,7 @@
 version: 0.2
 
-env:
-  variables:
+#env:
+#  variables:
     #ACCOUNT_ID: "767397760892"
     #AWS_REGION: "us-east-1"
     #IMAGE_REPO_NAME: "my-ecr"
