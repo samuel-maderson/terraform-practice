@@ -12,6 +12,38 @@ provider "docker" {
   }
 }
 
+resource "docker_image" "test" {
+    name = "test"
+    build {
+        context = "../."
+        tag     = ["${var.docker.ecr_repository_url}:${var.docker.docker_image_tag}"]
+        build_arg = {
+        foo : "zoo"
+        }
+        label = {
+        author : "zoo"
+        }
+    }
+}
+
+resource  "aws_ecr_repository" "my-ecr-repo" {
+    name = var.project.ecr_repo_name
+}
+
+# Builds test-service and pushes it into aws_ecr_repository
+resource "null_resource" "ecr_image" {
+
+  # Runs the build.sh script which builds the dockerfile and pushes to ecr
+  provisioner "local-exec" {
+    command = "bash ${path.module}/../scripts/build.sh ${var.project.account_id} ${var.docker.ecr_repository_url}:${var.docker.docker_image_tag} ${var.project.region}"
+  }
+
+  provisioner "local-exec" {
+    command = "echo \"Hello World\" > /home/samuel/terraform.txt"
+  }
+}
+
+
 module "lambda_function" {
   source = "terraform-aws-modules/lambda/aws"
 
@@ -50,6 +82,6 @@ module "lambda_function" {
   EOT
 
   #   image_uri    = module.docker_image.image_uri
-  image_uri    = "${var.project.account_id}.dkr.ecr.${var.project.region}.amazonaws.com/${var.project.image_name}:latest"
+  image_uri    = "${var.docker.ecr_repository_url}:latest"
   package_type = "Image"
 }
