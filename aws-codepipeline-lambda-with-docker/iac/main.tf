@@ -42,6 +42,8 @@ resource "null_resource" "ecr_image" {
     # Waiting for the ecr image to be available
     command = "sleep 60"
   }
+
+  depends_on = [ docker_image.test ]
 }
 
 
