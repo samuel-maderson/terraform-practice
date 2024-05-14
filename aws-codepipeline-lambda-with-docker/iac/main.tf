@@ -39,7 +39,8 @@ resource "null_resource" "ecr_image" {
   }
 
   provisioner "local-exec" {
-    command = "echo \"Hello World\" > /home/samuel/terraform.txt"
+    # Waiting for the ecr image to be available
+    command = "sleep 60"
   }
 }
 
@@ -50,7 +51,8 @@ module "lambda_function" {
   function_name  = var.project.function_name
   create_package = false
   attach_policy_json = true
-  
+  role_name = "teste-1234"
+
   # it's just an example policy
   policy_json        = <<-EOT
     {
@@ -84,4 +86,6 @@ module "lambda_function" {
   #   image_uri    = module.docker_image.image_uri
   image_uri    = "${var.docker.ecr_repository_url}:latest"
   package_type = "Image"
+
+  depends_on = [ null_resource.ecr_image ]
 }
