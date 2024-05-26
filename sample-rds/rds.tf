@@ -2,6 +2,12 @@ provider "aws" {
     region = var.project.region
 }
 
+provider "mysql" {
+    endpoint = "${aws_db_instance.my_rds.endpoint}"
+    username = "${aws_db_instance.my_rds.username}"
+    password  = "${aws_db_instance.my_rds.password}"
+}
+
 locals {
 
     name = "${var.project.environment}-${var.project.name}"
@@ -45,4 +51,23 @@ resource "aws_security_group" "my_db_sg" {
         protocol = "-1"
         description = "Allow all outbound traffic"
     }
+}
+
+resource "mysql_database" "app" {
+    name = var.rds.project.db_name
+}
+
+resource "mysql_user" "fulano" {
+  user               = var.rds.project.db_user
+  host               = var.rds.project.db_user_source_host
+  plaintext_password = var.rds.project.db_password
+}
+
+
+resource "mysql_grant" "fulano" {
+  user       = mysql_user.fulano.user
+  database   = var.rds.project.db_name
+  host = var.rds.project.db_user_source_host
+  #privileges = ["SELECT", "UPDATE"]
+  privileges = ["ALL"]
 }

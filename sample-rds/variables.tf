@@ -19,6 +19,12 @@ variable rds {
       username = string
       password = string
       parameter_group_name = string
+      project = object({
+        db_name = string
+        db_user = string
+        db_password = string
+        db_user_source_host = string
+      })
     })
 }
 

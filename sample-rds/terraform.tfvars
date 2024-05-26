@@ -1,7 +1,7 @@
 project = {
     name = "my-project-rds"
     environment = "dev"
-    vpc_id = "vpc-0488706be498d9555"
+    vpc_id = "vpc-0488eff95974f82e9"
     region = "us-east-1"
 }
 
@@ -14,6 +14,12 @@ rds = {
     username = "admin"
     password = "qwas123456"
     parameter_group_name = "default.mysql8.0"
+    project = {
+        db_name = "worker_db"
+        db_user = "fulano"
+        db_user_source_host = "%"
+        db_password = "worker123@"
+    }
 }
 
 tags = {
@@ -22,6 +28,6 @@ tags = {
     Workload = "my-project-rds"
     Owner = "Samuel Maderson"
     ProvisionedBy = "Terraform"
-    CreatedAt = "22-05-2024"
-    UpdatedAt = "22-05-2024"
+    CreatedAt = "25-05-2024"
+    UpdatedAt = "25-05-2024"
 }
