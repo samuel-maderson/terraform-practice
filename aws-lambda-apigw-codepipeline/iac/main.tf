@@ -28,6 +28,13 @@ resource "docker_image" "test" {
 
 resource  "aws_ecr_repository" "my-ecr-repo" {
     name = var.project.ecr_repo_name
+    image_tag_mutability = var.ecr.image_tag_mutability
+    encryption_configuration {
+      kms_key = var.ecr.encryption_configuration.kms_key
+    }
+    image_scanning_configuration {
+      scan_on_push = var.ecr.image_scanning_configuration.scan_on_push
+    }
 }
 
 # Builds test-service and pushes it into aws_ecr_repository

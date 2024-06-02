@@ -12,38 +12,3 @@ ignore:
         reason: 'Low severity module vulnerability'
         expires: 2026-08-26T08:40:35.249Z
         created: 2024-06-02T08:40:35.251Z
-  SNYK-CC-AWS-417:
-    - '*':
-        reason: 'Low severity module vulnerability'
-        expires: 2026-08-26T08:40:35.249Z
-        created: 2024-06-02T08:40:35.251Z
-  SNYK-CC-AWS-421:
-    - '*':
-        reason: 'Low severity module vulnerability'
-        expires: 2026-08-26T08:40:35.249Z
-        created: 2024-06-02T08:40:35.251Z
-  SNYK-CC-AWS-132:
-    - '*':
-        reason: 'Low severity module vulnerability'
-        expires: 2026-08-26T08:40:35.249Z
-        created: 2024-06-02T08:40:35.251Z
-  SNYK-CC-AWS-133:
-    - '*':
-        reason: 'Low severity module vulnerability'
-        expires: 2026-08-26T08:40:35.249Z
-        created: 2024-06-02T08:40:35.251Z
-  SNYK-CC-AWS-418:
-    - '*':
-        reason: 'Low severity module vulnerability'
-        expires: 2026-08-26T08:40:35.249Z
-        created: 2024-06-02T08:40:35.251Z
-  SNYK-CC-AWS-126:
-    - '*':
-        reason: 'Low severity module vulnerability'
-        expires: 2026-08-26T08:40:35.249Z
-        created: 2024-06-02T08:40:35.251Z
-  SNYK-CC-AWS-61:
-    - '*':
-        reason: 'Low severity module vulnerability'
-        expires: 2026-08-26T08:40:35.249Z
-        created: 2024-06-02T08:40:35.251Z

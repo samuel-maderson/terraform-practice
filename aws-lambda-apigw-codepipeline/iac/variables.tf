@@ -13,3 +13,15 @@ variable "docker" {
         docker_image_tag   = string
     })
 }
+
+variable "ecr" {
+  type = object({
+    image_tag_mutability = string
+    encryption_configuration = object({
+       kms_key = string
+    })
+    image_scanning_configuration = object({
+        scan_on_push = bool
+    })
+  })
+}
