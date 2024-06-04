@@ -1,0 +1,14 @@
+# Documentation: 
+# https://docs.snyk.io/snyk-cli/scan-and-maintain-projects-using-the-cli/snyk-cli-for-iac/iac-ignores-using-the-.snyk-policy-file#ignore-paths
+version: v1.19.0
+ignore:
+  SNYK-CC-AWS-422:
+    - '*':
+        reason: 'Low severity module vulnerability'
+        expires: 2026-08-26T08:40:35.249Z
+        created: 2024-06-02T08:40:35.251Z
+  SNYK-CC-AWS-415:
+    - '*':
+        reason: 'Low severity module vulnerability'
+        expires: 2026-08-26T08:40:35.249Z
+        created: 2024-06-02T08:40:35.251Z
