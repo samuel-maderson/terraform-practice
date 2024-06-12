@@ -8,5 +8,5 @@ apigateway = {
 }
 
 lambda = {
-    name = "t1-HelloWorldFunction-50YUWhrBeh7l"
+    name = "payments-app-prod-callback"
 }

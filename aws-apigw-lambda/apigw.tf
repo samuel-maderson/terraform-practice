@@ -14,7 +14,7 @@ resource "aws_api_gateway_rest_api" "my_api" {
 resource "aws_api_gateway_resource" "my_resource" {
   rest_api_id = aws_api_gateway_rest_api.my_api.id
   parent_id   = aws_api_gateway_rest_api.my_api.root_resource_id
-  path_part   = "myresource"
+  path_part   = var.apigateway.path
 }
 
 resource "aws_api_gateway_method" "my_method" {
@@ -47,5 +47,5 @@ resource "aws_api_gateway_deployment" "my_deployment" {
   ]
 
   rest_api_id = aws_api_gateway_rest_api.my_api.id
-  stage_name  = "dev"
+  stage_name  = var.project.env
 }
